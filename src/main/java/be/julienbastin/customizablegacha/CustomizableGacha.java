@@ -1,21 +1,42 @@
 package be.julienbastin.customizablegacha;
 
+import be.julienbastin.customizablegacha.commands.GachaCommand;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.annotation.dependency.Dependency;
+import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
+import org.bukkit.plugin.java.annotation.plugin.*;
+import org.bukkit.plugin.java.annotation.plugin.author.Author;
+import org.bukkit.plugin.java.annotation.plugin.author.Authors;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Plugin(name = "CustomizableGacha", version = "1.0.0-SNAPSHOT")
+@Description(value = "Plugin to create customizable gacha draws")
+@Authors({
+    @Author("bastinjul (Julien Bastin)")
+})
+@Website("https://julienbastin.be")
+@ApiVersion(ApiVersion.Target.v1_19)
+@LogPrefix("CustomizableGacha")
+@Dependency(value = "Vault")
+@SoftDependency(value = "Vault")
 public class CustomizableGacha extends JavaPlugin {
 
     public static final Logger LOGGER = PluginLogger.getLogger("CustomizableGacha");
     private static Economy econ = null;
     private static Permission permission = null;
     private static Chat chat = null;
+
+    @Inject
+    private GachaCommand gachaCommand;
 
     @Override
     public void onDisable() {
@@ -32,6 +53,14 @@ public class CustomizableGacha extends JavaPlugin {
         }
         setupPermissions(); //if mandatory, disable plugin
         setupChat(); //if mandatory, disable plugin
+        BinderModule binderModule = new BinderModule(this);
+        Injector injector = binderModule.createInjector();
+        injector.injectMembers(this);
+        registerCommands();
+    }
+
+    private void registerCommands() {
+        this.getCommand("czgacha").setExecutor(this.gachaCommand);
     }
 
     private boolean setupEconomy() {
