@@ -1,11 +1,14 @@
 package be.julienbastin.customizablegacha;
 
 import be.julienbastin.customizablegacha.commands.GachaCommand;
+import be.julienbastin.customizablegacha.config.models.Pack;
+import be.julienbastin.customizablegacha.config.models.Rarity;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,7 +17,6 @@ import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.bukkit.plugin.java.annotation.plugin.author.Authors;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,7 +58,10 @@ public class CustomizableGacha extends JavaPlugin {
         BinderModule binderModule = new BinderModule(this);
         Injector injector = binderModule.createInjector();
         injector.injectMembers(this);
+        saveDefaultConfig();
+        registerSerializers();
         registerCommands();
+        //TODO verify config
     }
 
     private void registerCommands() {
@@ -87,6 +92,11 @@ public class CustomizableGacha extends JavaPlugin {
         if(rsp == null) return false;
         chat = rsp.getProvider();
         return true;
+    }
+
+    private void registerSerializers() {
+        ConfigurationSerialization.registerClass(Pack.class);
+        ConfigurationSerialization.registerClass(Rarity.class);
     }
 
     public static Economy getEcon() {

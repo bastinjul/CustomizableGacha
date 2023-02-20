@@ -1,0 +1,20 @@
+multi-draw:
+  quantity: 10
+
+packs:
+  - id: 1
+    item: DIAMOND
+    quantity: 10
+    rarity: ur
+
+rarities:
+  - shortname: c
+    name: common
+  - shortname: uc
+    name: uncommon
+  - shortname: r
+    name: rare
+  - shortname: sr
+    name: super rare
+  - shortname: ur
+    name: ultra rare
