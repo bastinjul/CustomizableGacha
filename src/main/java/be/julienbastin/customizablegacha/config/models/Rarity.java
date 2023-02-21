@@ -9,12 +9,14 @@ public class Rarity implements ConfigurationSerializable {
 
     private String shortname;
     private String name;
+    private Integer probability;
 
     @Override
     public @NotNull Map<String, Object> serialize() {
         return Map.of(
                 "shortname", shortname,
-                "name", name
+                "name", name,
+                "probability", probability
         );
     }
 
@@ -32,5 +34,13 @@ public class Rarity implements ConfigurationSerializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getProbability() {
+        return probability;
+    }
+
+    public void setProbability(Integer probability) {
+        this.probability = probability;
     }
 }

@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.bukkit.plugin.java.annotation.plugin.author.Authors;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,7 +66,7 @@ public class CustomizableGacha extends JavaPlugin {
     }
 
     private void registerCommands() {
-        this.getCommand("czgacha").setExecutor(this.gachaCommand);
+        this.getCommand(GachaCommand.getCommand()).setExecutor(this.gachaCommand);
     }
 
     private boolean setupEconomy() {

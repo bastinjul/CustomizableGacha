@@ -5,6 +5,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class Pack implements ConfigurationSerializable {
 
@@ -14,31 +15,17 @@ public class Pack implements ConfigurationSerializable {
     private String rarityShortName;
     private Rarity rarity;
 
+    private final Map<String, Consumer<Object>> setters = Map.of(
+            "id", val -> this.id = val instanceof Integer i ? i : null,
+            "item", val -> this.item = val instanceof String s ? Material.getMaterial(s) : null,
+            "quantity", val -> this.quantity = val instanceof Integer i ? i : null,
+            "rarity", val -> this.rarityShortName = val instanceof String s ? s : null
+    );
+
     public Pack(Map<?, ?> valueMap) {
         valueMap.forEach((key1, value) -> {
-            if (key1 instanceof String key) {
-                switch (key) {
-                    case "id" -> {
-                        if (value instanceof Integer l) {
-                            this.id = l;
-                        }
-                    }
-                    case "item" -> {
-                        if (value instanceof String s) {
-                            this.item = Material.getMaterial(s);
-                        }
-                    }
-                    case "quantity" -> {
-                        if (value instanceof Integer l) {
-                            this.quantity = l;
-                        }
-                    }
-                    case "rarity" -> {
-                        if (value instanceof String s) {
-                            this.rarityShortName = s;
-                        }
-                    }
-                }
+            if (key1 instanceof String key && setters.containsKey(key)) {
+                setters.get(key).accept(value);
             }
         });
     }
