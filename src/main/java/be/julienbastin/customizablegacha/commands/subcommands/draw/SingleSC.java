@@ -2,18 +2,18 @@ package be.julienbastin.customizablegacha.commands.subcommands.draw;
 
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
 import org.bukkit.command.Command;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GachaSingle extends SubCommand<Player> {
+public class SingleSC extends SubCommand {
 
     public static final String PERMISSION = "czgacha.single";
 
-    public GachaSingle(String parentCommand, JavaPlugin plugin) {
+    public SingleSC(String parentCommand, JavaPlugin plugin) {
         super(parentCommand, plugin, PERMISSION);
     }
 
@@ -28,12 +28,12 @@ public class GachaSingle extends SubCommand<Player> {
     }
 
     @Override
-    public void perform(@NotNull Player sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public void perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //TODO
     }
 
     @Override
-    public @Nullable List<String> autoComplete(@NotNull Player sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         return null;
     }
 }

@@ -1,4 +1,4 @@
-package be.julienbastin.customizablegacha.commands.subcommands.pack;
+package be.julienbastin.customizablegacha.commands.subcommands.rarity;
 
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
 import org.bukkit.command.Command;
@@ -9,20 +9,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GachaPack extends SubCommand<CommandSender> {
+public class RarityGetSC extends SubCommand {
 
-    public GachaPack(String parentCommand, JavaPlugin plugin) {
-        super(parentCommand, plugin);
+    public static final String PERMISSION = "czgacha.rarity.consult";
+
+    public RarityGetSC(String parentCommand, JavaPlugin plugin) {
+        super(parentCommand, plugin, PERMISSION);
     }
 
     @Override
     public @NotNull String getValue() {
-        return "pack";
+        return "get";
     }
 
     @Override
     public @NotNull String description() {
-        return "Pack configuration command";
+        return "Get information on an existing rarity";
     }
 
     @Override

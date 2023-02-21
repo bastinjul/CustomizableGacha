@@ -2,8 +2,10 @@ package be.julienbastin.customizablegacha.commands;
 
 import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
-import be.julienbastin.customizablegacha.commands.subcommands.draw.GachaMulti;
-import be.julienbastin.customizablegacha.commands.subcommands.draw.GachaSingle;
+import be.julienbastin.customizablegacha.commands.subcommands.draw.MultiSC;
+import be.julienbastin.customizablegacha.commands.subcommands.draw.SingleSC;
+import be.julienbastin.customizablegacha.commands.subcommands.pack.*;
+import be.julienbastin.customizablegacha.commands.subcommands.rarity.*;
 import com.google.inject.Inject;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,41 +28,41 @@ import java.util.concurrent.atomic.AtomicReference;
 )
 // Global permissions
 @Permission(name = "czgacha.*", desc = "Access to all commands", defaultValue = PermissionDefault.OP, children = {
-        @ChildPermission(name = GachaSingle.PERMISSION),
-        @ChildPermission(name = GachaMulti.PERMISSION),
-        @ChildPermission(name = "czgacha.pack.*"),
-        @ChildPermission(name = "czgacha.rarity.*")
+        @ChildPermission(name = SingleSC.PERMISSION),
+        @ChildPermission(name = MultiSC.PERMISSION),
+        @ChildPermission(name = PackSC.PERMISSION),
+        @ChildPermission(name = RaritySC.PERMISSION)
 })
 
 //draw permissions
-@Permission(name = GachaSingle.PERMISSION, desc = "Draw of a single pack", defaultValue = PermissionDefault.TRUE)
-@Permission(name = GachaMulti.PERMISSION, desc = "Draw of multiple packs", defaultValue = PermissionDefault.TRUE)
+@Permission(name = SingleSC.PERMISSION, desc = "Draw of a single pack", defaultValue = PermissionDefault.TRUE)
+@Permission(name = MultiSC.PERMISSION, desc = "Draw of multiple packs", defaultValue = PermissionDefault.TRUE)
 
 //pack management permissions
-@Permission(name = "czgacha.pack.*", desc = "Pack management rights", defaultValue = PermissionDefault.OP, children = {
-        @ChildPermission(name = "czgacha.pack.consult"),
-        @ChildPermission(name = "czgacha.pack.create"),
-        @ChildPermission(name = "czgacha.pack.modify"),
-        @ChildPermission(name = "czgacha.pack.delete")
+@Permission(name = PackSC.PERMISSION, desc = "Pack management rights", defaultValue = PermissionDefault.OP, children = {
+        @ChildPermission(name = PackGetSC.PERMISSION),
+        @ChildPermission(name = PackCreateSC.PERMISSION),
+        @ChildPermission(name = PackModifySC.PERMISSION),
+        @ChildPermission(name = PackDeleteSC.PERMISSION)
 })
-@Permission(name = "czgacha.pack.consult", desc = "Get the list of packs possible to draw", defaultValue = PermissionDefault.TRUE)
-@Permission(name = "czgacha.pack.create", desc = "Creation of new packs", defaultValue = PermissionDefault.OP)
-@Permission(name = "czgacha.pack.modify", desc = "Modification of existing pack", defaultValue = PermissionDefault.OP)
-@Permission(name = "czgacha.pack.delete", desc = "Deletion of existing pack", defaultValue = PermissionDefault.OP)
+@Permission(name = PackGetSC.PERMISSION, desc = "Get the list of packs possible to draw", defaultValue = PermissionDefault.TRUE)
+@Permission(name = PackCreateSC.PERMISSION, desc = "Creation of new packs", defaultValue = PermissionDefault.OP)
+@Permission(name = PackModifySC.PERMISSION, desc = "Modification of existing pack", defaultValue = PermissionDefault.OP)
+@Permission(name = PackDeleteSC.PERMISSION, desc = "Deletion of existing pack", defaultValue = PermissionDefault.OP)
 
 //rarity management permissions
-@Permission(name = "czgacha.rarity.*", desc = "Rarity management rights", defaultValue = PermissionDefault.OP, children = {
-        @ChildPermission(name = "czgacha.rarity.consult"),
-        @ChildPermission(name = "czgacha.rarity.create"),
-        @ChildPermission(name = "czgacha.rarity.modify"),
-        @ChildPermission(name = "czgacha.rarity.delete")
+@Permission(name = RaritySC.PERMISSION, desc = "Rarity management rights", defaultValue = PermissionDefault.OP, children = {
+        @ChildPermission(name = RarityGetSC.PERMISSION),
+        @ChildPermission(name = RarityCreateSC.PERMISSION),
+        @ChildPermission(name = RarityModifySC.PERMISSION),
+        @ChildPermission(name = RarityDeleteSC.PERMISSION)
 })
-@Permission(name = "czgacha.rarity.consult", desc = "Get the list of existing rarities", defaultValue = PermissionDefault.OP)
-@Permission(name = "czgacha.rarity.create", desc = "Create new rarity", defaultValue = PermissionDefault.OP)
-@Permission(name = "czgacha.rarity.modify", desc = "Modify probability of rarities", defaultValue = PermissionDefault.OP)
-@Permission(name = "czgacha.rarity.delete", desc = "Delete existing rarity", defaultValue = PermissionDefault.OP)
+@Permission(name = RarityGetSC.PERMISSION, desc = "Get the list of existing rarities", defaultValue = PermissionDefault.OP)
+@Permission(name = RarityCreateSC.PERMISSION, desc = "Create new rarity", defaultValue = PermissionDefault.OP)
+@Permission(name = RarityModifySC.PERMISSION, desc = "Modify probability of rarities", defaultValue = PermissionDefault.OP)
+@Permission(name = RarityDeleteSC.PERMISSION, desc = "Delete existing rarity", defaultValue = PermissionDefault.OP)
 public class GachaCommand implements TabExecutor {
-    private final List<SubCommand<Player>> subCommands;
+    private final List<SubCommand> subCommands;
 
     public static final String COMMAND = "czgacha";
 
@@ -69,7 +71,12 @@ public class GachaCommand implements TabExecutor {
     @Inject
     public GachaCommand(CustomizableGacha plugin) {
         this.plugin = plugin;
-        this.subCommands = List.of(new GachaSingle(COMMAND, plugin), new GachaMulti(COMMAND, plugin));
+        this.subCommands = List.of(
+                new SingleSC(COMMAND, plugin),
+                new MultiSC(COMMAND, plugin),
+                new PackSC(COMMAND, plugin),
+                new RaritySC(COMMAND, plugin)
+        );
     }
 
     @Override
@@ -108,7 +115,7 @@ public class GachaCommand implements TabExecutor {
         return true;
     }
 
-    public List<SubCommand<Player>> getSubCommands() {
+    public List<SubCommand> getSubCommands() {
         return subCommands;
     }
 
