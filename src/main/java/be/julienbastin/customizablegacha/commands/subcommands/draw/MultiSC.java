@@ -28,8 +28,9 @@ public class MultiSC extends SubCommand {
     }
 
     @Override
-    public void perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //TODO
+        return true;
     }
 
     @Override

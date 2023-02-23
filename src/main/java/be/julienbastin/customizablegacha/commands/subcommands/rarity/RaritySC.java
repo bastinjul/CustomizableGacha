@@ -34,13 +34,12 @@ public class RaritySC extends SubCommand {
     }
 
     @Override
-    public void perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
+    public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return super.perform(sender, command, label, args);
     }
 
     @Override
     public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
-        return null;
+        return super.autoComplete(sender, command, label, args);
     }
 }
