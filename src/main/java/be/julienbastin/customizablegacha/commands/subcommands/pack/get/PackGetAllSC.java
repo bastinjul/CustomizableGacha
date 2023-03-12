@@ -31,18 +31,24 @@ public class PackGetAllSC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length > 1) return false;
+        if(args.length > 1) {
+            sender.sendMessage("Usage : /czg pack get all <page-number>");
+            return false;
+        }
         int pageNumber = 1;
         try {
             if(args.length == 1) pageNumber = Integer.parseInt(args[0])+1;
         } catch (NumberFormatException e) {
             sender.sendMessage("Invalid page number");
+            sender.sendMessage("Usage : /czg pack get all <page-number>");
             return false;
         }
         ChatPaginator.ChatPage page = getPage(pageNumber);
         StringBuilder message = new StringBuilder();
         message.append(ChatColor.YELLOW).append("----------- ");
-        message.append(ChatColor.WHITE).append("All packs index (").append(page.getPageNumber()).append("/").append(page.getTotalPages()).append(")");
+        message.append(ChatColor.WHITE).append("All packs index (")
+                .append(page.getPageNumber()).append("/").append(page.getTotalPages())
+                .append(")");
         message.append(ChatColor.YELLOW).append("----------- ").append("\n").append(ChatColor.WHITE);
         for(String line : page.getLines()) {
             message.append(line).append("\n");
