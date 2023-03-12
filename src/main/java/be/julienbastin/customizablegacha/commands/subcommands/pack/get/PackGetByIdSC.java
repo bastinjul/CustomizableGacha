@@ -29,11 +29,26 @@ public class PackGetByIdSC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return true;
+        if(args.length == 1) {
+            try {
+                Integer packId = Integer.parseInt(args[0]);
+                if(this.plugin.getPacks().containsKey(packId)) {
+                    sender.sendMessage(this.plugin.getPacks().get(packId).toString());
+                    return true;
+                }
+            } catch (NumberFormatException e) {
+                //return false and send usage message
+            }
+        }
+        sender.sendMessage("Usage : /czgacha pack get id <pack-id>");
+        return false;
     }
 
     @Override
     public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(args.length == 1) {
+            return this.plugin.getPacks().keySet().stream().map(Object::toString).toList();
+        }
         return null;
     }
 }
