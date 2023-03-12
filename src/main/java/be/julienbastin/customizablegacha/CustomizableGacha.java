@@ -19,10 +19,10 @@ import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.bukkit.plugin.java.annotation.plugin.author.Authors;
 
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Plugin(name = "CustomizableGacha", version = "1.0.0-SNAPSHOT")
 @Description(value = "Plugin to create customizable gacha draws")
@@ -40,8 +40,6 @@ public class CustomizableGacha extends JavaPlugin {
     private static Economy econ = null;
     private static Permission permission = null;
     private static Chat chat = null;
-    private List<Pack> packs;
-    private List<Rarity> rarities;
 
     @Inject
     private GachaCommand gachaCommand;
@@ -123,6 +121,14 @@ public class CustomizableGacha extends JavaPlugin {
 
     public Map<Integer, Pack> getPacks() {
         return this.gachaConfiguration.getPacks();
+    }
+
+    public String getAllPacksString() {
+        return this.gachaConfiguration.getPacks()
+                .values()
+                .stream()
+                .map(Pack::toString)
+                .collect(Collectors.joining("\n"));
     }
 
     public Map<String, Rarity> getRarities() {

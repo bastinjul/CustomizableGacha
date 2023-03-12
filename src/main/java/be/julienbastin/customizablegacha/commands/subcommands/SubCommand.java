@@ -1,7 +1,7 @@
 package be.julienbastin.customizablegacha.commands.subcommands;
 
+import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.GachaTabExecutor;
-import be.julienbastin.customizablegacha.commands.utils.CommandUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,23 +15,23 @@ import java.util.function.Predicate;
 public abstract class SubCommand extends GachaTabExecutor {
 
     protected String parentCommand;
-    protected JavaPlugin plugin;
+    protected CustomizableGacha plugin;
     protected String permission;
 
-    public SubCommand(String parentCommand, JavaPlugin plugin) {
+    public SubCommand(String parentCommand, CustomizableGacha plugin) {
         super(Collections.emptyList());
         this.parentCommand = parentCommand;
         this.plugin = plugin;
     }
 
-    public SubCommand(String parentCommand, JavaPlugin plugin, String permission) {
+    public SubCommand(String parentCommand, CustomizableGacha plugin, String permission) {
         super(Collections.emptyList());
         this.parentCommand = parentCommand;
         this.plugin = plugin;
         this.permission = permission;
     }
 
-    public SubCommand(String parentCommand, JavaPlugin plugin, String permission, List<SubCommand> subCommands) {
+    public SubCommand(String parentCommand, CustomizableGacha plugin, String permission, List<SubCommand> subCommands) {
         super(subCommands);
         this.parentCommand = parentCommand;
         this.plugin = plugin;
@@ -60,8 +60,7 @@ public abstract class SubCommand extends GachaTabExecutor {
 
     @Nullable
     public List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length == 1) return CommandUtils.tabCompleteSubCommands(this.subCommands, sender);
-        return null;
+        return super.onTabComplete(sender, command, label, args);
     }
 
     public JavaPlugin getPlugin() {

@@ -1,9 +1,9 @@
 package be.julienbastin.customizablegacha.commands.subcommands.rarity;
 
+import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,7 @@ public class RarityDeleteSC extends SubCommand {
 
     public static final String PERMISSION = "czgacha.rarity.delete";
 
-    public RarityDeleteSC(String parentCommand, JavaPlugin plugin) {
+    public RarityDeleteSC(String parentCommand, CustomizableGacha plugin) {
         super(parentCommand, plugin, PERMISSION);
     }
 

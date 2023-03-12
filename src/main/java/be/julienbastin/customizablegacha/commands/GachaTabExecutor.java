@@ -40,14 +40,11 @@ public abstract class GachaTabExecutor implements TabExecutor {
         if(args.length == 1) {
             return CommandUtils.tabCompleteSubCommands(this.subCommands, commandSender);
         }
-        if(args.length == 2) {
-            AtomicReference<List<String>> atomicReference = new AtomicReference<>();
-            this.subCommands.stream()
-                    .filter(subCommand -> subCommand.getValue().equalsIgnoreCase(args[0]))
-                    .findFirst()
-                    .ifPresent(subCommand -> atomicReference.set(subCommand.autoComplete(commandSender, command, s, Arrays.copyOfRange(args, 1, args.length))));
-            return atomicReference.get();
-        }
-        return null;
+        AtomicReference<List<String>> atomicReference = new AtomicReference<>();
+        this.subCommands.stream()
+                .filter(subCommand -> subCommand.getValue().equalsIgnoreCase(args[0]))
+                .findFirst()
+                .ifPresent(subCommand -> atomicReference.set(subCommand.autoComplete(commandSender, command, s, Arrays.copyOfRange(args, 1, args.length))));
+        return atomicReference.get();
     }
 }

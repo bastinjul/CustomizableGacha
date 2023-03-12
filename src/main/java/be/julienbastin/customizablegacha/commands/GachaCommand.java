@@ -5,6 +5,9 @@ import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.MultiSC;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.SingleSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.*;
+import be.julienbastin.customizablegacha.commands.subcommands.pack.get.PackGetAllSC;
+import be.julienbastin.customizablegacha.commands.subcommands.pack.get.PackGetByIdSC;
+import be.julienbastin.customizablegacha.commands.subcommands.pack.get.PackGetByRaritySC;
 import be.julienbastin.customizablegacha.commands.subcommands.rarity.*;
 import com.google.inject.Inject;
 import org.bukkit.command.Command;
@@ -42,10 +45,17 @@ import java.util.List;
         @ChildPermission(name = PackModifySC.PERMISSION),
         @ChildPermission(name = PackDeleteSC.PERMISSION)
 })
-@Permission(name = PackGetSC.PERMISSION, desc = "Get the list of packs possible to draw", defaultValue = PermissionDefault.TRUE)
 @Permission(name = PackCreateSC.PERMISSION, desc = "Creation of new packs", defaultValue = PermissionDefault.OP)
 @Permission(name = PackModifySC.PERMISSION, desc = "Modification of existing pack", defaultValue = PermissionDefault.OP)
 @Permission(name = PackDeleteSC.PERMISSION, desc = "Deletion of existing pack", defaultValue = PermissionDefault.OP)
+@Permission(name = PackGetSC.PERMISSION, desc = "Get the list of packs possible to draw", defaultValue = PermissionDefault.TRUE, children = {
+        @ChildPermission(name = PackGetAllSC.PERMISSION),
+        @ChildPermission(name = PackGetByRaritySC.PERMISSION),
+        @ChildPermission(name = PackGetByIdSC.PERMISSION)
+})
+@Permission(name = PackGetAllSC.PERMISSION, desc = "Get list of all packs", defaultValue = PermissionDefault.TRUE)
+@Permission(name = PackGetByRaritySC.PERMISSION, desc = "Get list of packs by rarity", defaultValue = PermissionDefault.TRUE)
+@Permission(name = PackGetByIdSC.PERMISSION, desc = "Get the detail of a specific pack", defaultValue = PermissionDefault.TRUE)
 
 //rarity management permissions
 @Permission(name = RaritySC.PERMISSION, desc = "Rarity management rights", defaultValue = PermissionDefault.OP, children = {
@@ -54,7 +64,7 @@ import java.util.List;
         @ChildPermission(name = RarityModifySC.PERMISSION),
         @ChildPermission(name = RarityDeleteSC.PERMISSION)
 })
-@Permission(name = RarityGetSC.PERMISSION, desc = "Get the list of existing rarities", defaultValue = PermissionDefault.OP)
+@Permission(name = RarityGetSC.PERMISSION, desc = "Get the list of existing rarities", defaultValue = PermissionDefault.TRUE)
 @Permission(name = RarityCreateSC.PERMISSION, desc = "Create new rarity", defaultValue = PermissionDefault.OP)
 @Permission(name = RarityModifySC.PERMISSION, desc = "Modify probability of rarities", defaultValue = PermissionDefault.OP)
 @Permission(name = RarityDeleteSC.PERMISSION, desc = "Delete existing rarity", defaultValue = PermissionDefault.OP)

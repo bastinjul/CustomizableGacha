@@ -137,8 +137,8 @@ public class Pack extends ConfigurationModel {
 
     @Override
     public String toString() {
-        return "id = " + id + "\n" +
-                "items=" + itemStackList + "\n" +
-                "rarity=" + rarity.getName();
+        return "[id=" + id + "," +
+                "items=" + itemStackList + "," +
+                "rarity=" + rarity.getName() + "]";
     }
 }
