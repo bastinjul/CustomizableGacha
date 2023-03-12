@@ -1,6 +1,7 @@
 package be.julienbastin.customizablegacha;
 
 import be.julienbastin.customizablegacha.commands.GachaCommand;
+import be.julienbastin.customizablegacha.config.GachaConfiguration;
 import be.julienbastin.customizablegacha.config.Pack;
 import be.julienbastin.customizablegacha.config.Rarity;
 import com.google.inject.Inject;
@@ -18,7 +19,6 @@ import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.bukkit.plugin.java.annotation.plugin.author.Authors;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -45,6 +45,8 @@ public class CustomizableGacha extends JavaPlugin {
 
     @Inject
     private GachaCommand gachaCommand;
+    @Inject
+    private GachaConfiguration gachaConfiguration;
 
     @Override
     public void onDisable() {
@@ -67,7 +69,7 @@ public class CustomizableGacha extends JavaPlugin {
         saveDefaultConfig();
         registerSerializers();
         registerCommands();
-        if(!loadRaritiesFromConfiguration() && !loadPacksFromConfiguration()) {
+        if(!this.gachaConfiguration.loadRaritiesFromConfiguration() && !this.gachaConfiguration.loadPacksFromConfiguration()) {
             super.getServer().getPluginManager().disablePlugin(this);
         }
     }
@@ -107,59 +109,6 @@ public class CustomizableGacha extends JavaPlugin {
         ConfigurationSerialization.registerClass(Rarity.class);
     }
 
-    private boolean loadRaritiesFromConfiguration() {
-        this.rarities = new ArrayList<>();
-        boolean isValid = this.loadConfiguration("rarities");
-        LOGGER.log(Level.INFO, "List of rarities : {0}", this.rarities);
-        return isValid;
-    }
-
-    private boolean loadPacksFromConfiguration() {
-        this.packs = new ArrayList<>();
-        boolean isValid = this.loadConfiguration("packs");
-        LOGGER.log(Level.INFO, "List of packs : {0}", this.packs);
-        return isValid;
-    }
-
-    private boolean loadConfiguration(String path) {
-        List<?> objectList = getConfig().getList(path);
-        boolean isConfigValid = true;
-        if(objectList != null) {
-            for(Object o : objectList) {
-                if(o instanceof Map<?, ?> map) {
-                    if(path.equals("packs") && !this.fillPackList(map)) {
-                        isConfigValid = false;
-                    } else if(path.equals("rarities") && this.fillRarityList(map)) {
-                        isConfigValid = false;
-                    }
-                }
-            }
-        }
-        return isConfigValid;
-    }
-
-    private boolean fillPackList(Map<?, ?> map) {
-        Pack pack = new Pack(map, this);
-        if(pack.isValueMapValid()) {
-            this.packs.add(pack);
-        } else {
-            LOGGER.log(Level.SEVERE, "Invalid pack {0}", map);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean fillRarityList(Map<?, ?> map) {
-        Rarity rarity = new Rarity(map, this);
-        if(rarity.isValueMapValid()) {
-            this.rarities.add(rarity);
-        } else {
-            LOGGER.log(Level.SEVERE, "Invalid rarity {0}", map);
-            return false;
-        }
-        return true;
-    }
-
     public static Economy getEcon() {
         return econ;
     }
@@ -170,5 +119,13 @@ public class CustomizableGacha extends JavaPlugin {
 
     public static Chat getChat() {
         return chat;
+    }
+
+    public Map<Integer, Pack> getPacks() {
+        return this.gachaConfiguration.getPacks();
+    }
+
+    public Map<String, Rarity> getRarities() {
+        return this.gachaConfiguration.getRarities();
     }
 }

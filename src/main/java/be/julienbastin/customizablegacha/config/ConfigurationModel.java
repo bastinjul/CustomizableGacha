@@ -15,12 +15,12 @@ public abstract class ConfigurationModel implements ConfigurationSerializable {
     protected final Map<?, ?> valueMap;
     protected final Map<Object, BiPredicate<Object, CustomizableGacha>> validators;
     protected final boolean isValueMapValid;
-    protected CustomizableGacha customizableGacha;
+    protected CustomizableGacha plugin;
 
-    protected ConfigurationModel(@NotNull Map<?, ?> valueMap, @NotNull Map<Object, BiPredicate<Object, CustomizableGacha>> validators, CustomizableGacha customizableGacha) {
+    protected ConfigurationModel(@NotNull Map<?, ?> valueMap, @NotNull Map<Object, BiPredicate<Object, CustomizableGacha>> validators, CustomizableGacha plugin) {
         this.valueMap = valueMap;
         this.validators = validators;
-        this.customizableGacha = customizableGacha;
+        this.plugin = plugin;
         this.isValueMapValid = checkIfValueMapIsValid();
         if(this.isValueMapValid) {
             this.fillValues();
@@ -45,7 +45,7 @@ public abstract class ConfigurationModel implements ConfigurationSerializable {
     }
 
     private boolean isValueMapEntryValid(Map.Entry<Object, BiPredicate<Object, CustomizableGacha>> validatorEntry) {
-        return validatorEntry.getValue().test(valueMap.get(validatorEntry.getKey()), this.customizableGacha);
+        return validatorEntry.getValue().test(valueMap.get(validatorEntry.getKey()), this.plugin);
     }
 
     public boolean isValueMapValid() {

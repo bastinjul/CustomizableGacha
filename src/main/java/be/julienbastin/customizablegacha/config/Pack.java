@@ -22,7 +22,6 @@ public class Pack extends ConfigurationModel {
     private List<ItemStack> itemStackList;
     private String rarityShortName;
     private Rarity rarity;
-    private CustomizableGacha plugin;
 
     public Pack(Map<?, ?> valueMap, CustomizableGacha plugin) {
         super(
@@ -57,6 +56,8 @@ public class Pack extends ConfigurationModel {
                 setters.get(key).accept(value);
             }
         });
+        this.rarity = this.plugin.getRarities().get(this.rarityShortName);
+        this.rarity.addPack(this);
     }
 
     public Integer getId() {
@@ -111,8 +112,15 @@ public class Pack extends ConfigurationModel {
     }
 
     public static boolean isRarityValid(Object value, CustomizableGacha plugin) {
-        //TODO : check if it's in the list of available rarities
-        if (!(value instanceof String)) {
+        if (value instanceof String s) {
+            if(plugin.getRarities().keySet().stream()
+                    .filter(rarity -> rarity.equals(s))
+                    .findFirst()
+                    .isEmpty()) {
+                LOGGER.log(Level.WARNING, "Pack's rarity should be defined in rarities section. Unknown rarity {0}", s);
+                return false;
+            }
+        } else {
             LOGGER.log(Level.WARNING, "Pack's rarity should be a String. Got value {0}", value);
             return false;
         }
@@ -131,7 +139,6 @@ public class Pack extends ConfigurationModel {
     public String toString() {
         return "id = " + id + "\n" +
                 "items=" + itemStackList + "\n" +
-                "rarityShortName='" + rarityShortName + '\'' + "\n" +
                 "rarity=" + rarity.getName();
     }
 }

@@ -3,6 +3,8 @@ package be.julienbastin.customizablegacha.config;
 import be.julienbastin.customizablegacha.CustomizableGacha;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -18,6 +20,7 @@ public class Rarity extends ConfigurationModel {
     private String shortname;
     private String name;
     private Integer probability;
+    private final List<Pack> packs;
 
     public Rarity(@NotNull Map<?, ?> valueMap, CustomizableGacha plugin) {
         super(
@@ -29,6 +32,7 @@ public class Rarity extends ConfigurationModel {
                 ),
                 plugin
         );
+        this.packs = new ArrayList<>();
     }
 
     @Override
@@ -100,6 +104,15 @@ public class Rarity extends ConfigurationModel {
             return false;
         }
         return true;
+    }
+
+    @NotNull
+    public List<Pack> getPacks() {
+        return packs;
+    }
+
+    public void addPack(@NotNull Pack pack) {
+        this.packs.add(pack);
     }
 
     @Override
