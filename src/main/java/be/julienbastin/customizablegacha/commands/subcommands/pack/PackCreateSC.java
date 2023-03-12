@@ -29,7 +29,10 @@ public class PackCreateSC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
+        if(args.length == 0) {
+            sender.sendMessage("Usage : /czgacha pack create <rarity> <item name> <quantity>");
+        }
+
         return true;
     }
 

@@ -1,5 +1,6 @@
 package be.julienbastin.customizablegacha.commands.subcommands;
 
+import be.julienbastin.customizablegacha.commands.GachaTabExecutor;
 import be.julienbastin.customizablegacha.commands.utils.CommandUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -7,31 +8,33 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class SubCommand {
+public abstract class SubCommand extends GachaTabExecutor {
 
     protected String parentCommand;
     protected JavaPlugin plugin;
-    protected List<SubCommand> subCommands;
     protected String permission;
 
     public SubCommand(String parentCommand, JavaPlugin plugin) {
+        super(Collections.emptyList());
         this.parentCommand = parentCommand;
         this.plugin = plugin;
     }
 
     public SubCommand(String parentCommand, JavaPlugin plugin, String permission) {
+        super(Collections.emptyList());
         this.parentCommand = parentCommand;
         this.plugin = plugin;
         this.permission = permission;
     }
 
     public SubCommand(String parentCommand, JavaPlugin plugin, String permission, List<SubCommand> subCommands) {
+        super(subCommands);
         this.parentCommand = parentCommand;
         this.plugin = plugin;
-        this.subCommands = subCommands;
         this.permission = permission;
     }
 
@@ -52,8 +55,7 @@ public abstract class SubCommand {
     }
 
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length == 0) return CommandUtils.noArgsCommand(this.subCommands, sender);
-        return true;
+        return super.onCommand(sender, command, label, args);
     }
 
     @Nullable
@@ -68,10 +70,6 @@ public abstract class SubCommand {
 
     public List<SubCommand> getSubCommands() {
         return subCommands;
-    }
-
-    public void setSubCommands(List<SubCommand> subCommands) {
-        this.subCommands = subCommands;
     }
 
     public String getPermissions() {

@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.util.List;
 
@@ -13,8 +14,11 @@ public class PackGetSC extends SubCommand {
 
     public static final String PERMISSION = "czgacha.pack.consult";
 
+    private final Logger LOGGER;
+
     public PackGetSC(String parentCommand, JavaPlugin plugin) {
         super(parentCommand, plugin, PERMISSION);
+        this.LOGGER = this.plugin.getSLF4JLogger();
     }
 
     @Override

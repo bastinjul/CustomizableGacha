@@ -1,8 +1,8 @@
 package be.julienbastin.customizablegacha;
 
 import be.julienbastin.customizablegacha.commands.GachaCommand;
-import be.julienbastin.customizablegacha.config.models.Pack;
-import be.julienbastin.customizablegacha.config.models.Rarity;
+import be.julienbastin.customizablegacha.config.Pack;
+import be.julienbastin.customizablegacha.config.Rarity;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.milkbowl.vault.chat.Chat;
@@ -18,6 +18,9 @@ import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.bukkit.plugin.java.annotation.plugin.author.Authors;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +40,8 @@ public class CustomizableGacha extends JavaPlugin {
     private static Economy econ = null;
     private static Permission permission = null;
     private static Chat chat = null;
+    private List<Pack> packs;
+    private List<Rarity> rarities;
 
     @Inject
     private GachaCommand gachaCommand;
@@ -62,7 +67,9 @@ public class CustomizableGacha extends JavaPlugin {
         saveDefaultConfig();
         registerSerializers();
         registerCommands();
-        //TODO verify config
+        if(!loadRaritiesFromConfiguration() && !loadPacksFromConfiguration()) {
+            super.getServer().getPluginManager().disablePlugin(this);
+        }
     }
 
     private void registerCommands() {
@@ -98,6 +105,59 @@ public class CustomizableGacha extends JavaPlugin {
     private void registerSerializers() {
         ConfigurationSerialization.registerClass(Pack.class);
         ConfigurationSerialization.registerClass(Rarity.class);
+    }
+
+    private boolean loadRaritiesFromConfiguration() {
+        this.rarities = new ArrayList<>();
+        boolean isValid = this.loadConfiguration("rarities");
+        LOGGER.log(Level.INFO, "List of rarities : {0}", this.rarities);
+        return isValid;
+    }
+
+    private boolean loadPacksFromConfiguration() {
+        this.packs = new ArrayList<>();
+        boolean isValid = this.loadConfiguration("packs");
+        LOGGER.log(Level.INFO, "List of packs : {0}", this.packs);
+        return isValid;
+    }
+
+    private boolean loadConfiguration(String path) {
+        List<?> objectList = getConfig().getList(path);
+        boolean isConfigValid = true;
+        if(objectList != null) {
+            for(Object o : objectList) {
+                if(o instanceof Map<?, ?> map) {
+                    if(path.equals("packs") && !this.fillPackList(map)) {
+                        isConfigValid = false;
+                    } else if(path.equals("rarities") && this.fillRarityList(map)) {
+                        isConfigValid = false;
+                    }
+                }
+            }
+        }
+        return isConfigValid;
+    }
+
+    private boolean fillPackList(Map<?, ?> map) {
+        Pack pack = new Pack(map, this);
+        if(pack.isValueMapValid()) {
+            this.packs.add(pack);
+        } else {
+            LOGGER.log(Level.SEVERE, "Invalid pack {0}", map);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean fillRarityList(Map<?, ?> map) {
+        Rarity rarity = new Rarity(map, this);
+        if(rarity.isValueMapValid()) {
+            this.rarities.add(rarity);
+        } else {
+            LOGGER.log(Level.SEVERE, "Invalid rarity {0}", map);
+            return false;
+        }
+        return true;
     }
 
     public static Economy getEcon() {

@@ -15,7 +15,7 @@ public class PackSC extends SubCommand{
 
     public PackSC(String parentCommand, JavaPlugin plugin) {
         super(parentCommand, plugin, PERMISSION);
-        this.subCommands = List.of(
+        super.subCommands = List.of(
                 new PackCreateSC(syntax(), plugin),
                 new PackDeleteSC(syntax(), plugin),
                 new PackGetSC(syntax(), plugin),

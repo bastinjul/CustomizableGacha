@@ -3,8 +3,9 @@ multi-draw:
 
 packs:
   - id: 1
-    item: DIAMOND
-    quantity: 10
+    items:
+      - type: DIAMOND
+        amount: 10
     rarity: ur
 
 rarities:
