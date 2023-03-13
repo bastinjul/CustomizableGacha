@@ -32,7 +32,7 @@ public class PackGetByRaritySC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length > 2) {
+        if(args.length > 2 || args.length == 0) {
             sender.sendMessage("Usage : /czg pack get rarity <rarity> <page-number>");
             return false;
         }
