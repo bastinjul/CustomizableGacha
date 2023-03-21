@@ -21,10 +21,6 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
-        <repository>
-            <id>unnamed-public</id>
-            <url>https://repo.unnamed.team/repository/unnamed-public/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -44,11 +40,6 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>plugin-annotations</artifactId>
             <version>1.2.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>me.fixeddev</groupId>
-            <artifactId>commandflow-universal</artifactId>
-            <version>0.5.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>

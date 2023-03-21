@@ -1,16 +1,18 @@
 package be.julienbastin.customizablegacha.config;
 
-import be.julienbastin.customizablegacha.CustomizableGacha;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import static be.julienbastin.customizablegacha.CustomizableGacha.LOGGER;
 
+@SerializableAs("Rarity")
 public class Rarity extends ConfigurationModel {
 
     private static final String SHORTNAME_KEY = "shortname";
@@ -22,7 +24,7 @@ public class Rarity extends ConfigurationModel {
     private Integer probability;
     private final List<Pack> packs;
 
-    public Rarity(@NotNull Map<?, ?> valueMap, CustomizableGacha plugin) {
+    public Rarity(@NotNull Map<?, ?> valueMap) {
         super(
                 valueMap,
                 Map.of(
@@ -30,7 +32,7 @@ public class Rarity extends ConfigurationModel {
                         NAME_KEY, Rarity::isNameValid,
                         PROBABILITY_KEY, Rarity::isProbabilityValid
                 ),
-                plugin
+                Set.of(SHORTNAME_KEY, NAME_KEY, PROBABILITY_KEY)
         );
         this.packs = new ArrayList<>();
     }
@@ -66,7 +68,7 @@ public class Rarity extends ConfigurationModel {
         this.shortname = shortname;
     }
 
-    public static boolean isShortNameValid(Object value, CustomizableGacha plugin) {
+    public static boolean isShortNameValid(Object value) {
         if(!(value instanceof String)) {
             LOGGER.log(Level.WARNING, "Rarity's shortname should be a String. Got value {0}", value);
             return false;
@@ -82,7 +84,7 @@ public class Rarity extends ConfigurationModel {
         this.name = name;
     }
 
-    public static boolean isNameValid(Object value, CustomizableGacha plugin) {
+    public static boolean isNameValid(Object value) {
         if(!(value instanceof String)) {
             LOGGER.log(Level.WARNING, "Rarity's name should be a String. Got value {0}", value);
             return false;
@@ -98,7 +100,7 @@ public class Rarity extends ConfigurationModel {
         this.probability = probability;
     }
 
-    public static boolean isProbabilityValid(Object value, CustomizableGacha plugin) {
+    public static boolean isProbabilityValid(Object value) {
         if(!(value instanceof Integer i) || i < 0 || i > 100) {
             LOGGER.log(Level.WARNING, "Rarity's probability should be a number between 0 and 100. Got value {0}", value);
             return false;

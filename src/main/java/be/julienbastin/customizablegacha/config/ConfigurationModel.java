@@ -5,7 +5,8 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.function.BiPredicate;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import static be.julienbastin.customizablegacha.CustomizableGacha.LOGGER;
@@ -13,14 +14,21 @@ import static be.julienbastin.customizablegacha.CustomizableGacha.LOGGER;
 public abstract class ConfigurationModel implements ConfigurationSerializable {
 
     protected final Map<?, ?> valueMap;
-    protected final Map<Object, BiPredicate<Object, CustomizableGacha>> validators;
+    protected final Map<Object, Predicate<Object>> validators;
     protected final boolean isValueMapValid;
-    protected CustomizableGacha plugin;
 
-    protected ConfigurationModel(@NotNull Map<?, ?> valueMap, @NotNull Map<Object, BiPredicate<Object, CustomizableGacha>> validators, CustomizableGacha plugin) {
+    protected CustomizableGacha plugin;
+    protected Set<Object> keySet;
+    protected ConfigurationModel() {
+        this.valueMap = null;
+        this.validators = null;
+        this.isValueMapValid = false;
+    }
+
+    protected ConfigurationModel(@NotNull Map<?, ?> valueMap, @NotNull Map<Object, Predicate<Object>> validators, Set<Object> keySet) {
         this.valueMap = valueMap;
         this.validators = validators;
-        this.plugin = plugin;
+        this.keySet = keySet;
         this.isValueMapValid = checkIfValueMapIsValid();
         if(this.isValueMapValid) {
             this.fillValues();
@@ -30,7 +38,7 @@ public abstract class ConfigurationModel implements ConfigurationSerializable {
     protected abstract void fillValues();
 
     private boolean checkIfValueMapIsValid() {
-        boolean areAllKeysPresent = this.valueMap.keySet().containsAll(validators.keySet());
+        boolean areAllKeysPresent = this.keySet.containsAll(validators.keySet());
         if(!areAllKeysPresent) {
             LOGGER.log(
                     Level.WARNING,
@@ -44,11 +52,19 @@ public abstract class ConfigurationModel implements ConfigurationSerializable {
                 .reduce(true, Boolean::logicalAnd);
     }
 
-    private boolean isValueMapEntryValid(Map.Entry<Object, BiPredicate<Object, CustomizableGacha>> validatorEntry) {
-        return validatorEntry.getValue().test(valueMap.get(validatorEntry.getKey()), this.plugin);
+    private boolean isValueMapEntryValid(Map.Entry<Object, Predicate<Object>> validatorEntry) {
+        return validatorEntry.getValue().test(valueMap.get(validatorEntry.getKey()));
     }
 
     public boolean isValueMapValid() {
         return isValueMapValid;
+    }
+
+    public CustomizableGacha getPlugin() {
+        return plugin;
+    }
+
+    public void setPlugin(CustomizableGacha plugin) {
+        this.plugin = plugin;
     }
 }

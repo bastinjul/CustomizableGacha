@@ -2,25 +2,40 @@ multi-draw:
   quantity: 10
 
 packs:
-  - id: 1
+  - ==: Pack
     items:
-      - type: DIAMOND
-        amount: 10
-    rarity: ur
+      - ==: org.bukkit.inventory.ItemStack
+        v: 3218
+        type: DIAMOND
+    rarity: r
+    id: 1
+  - ==: Pack
+    items:
+      - ==: org.bukkit.inventory.ItemStack
+        v: 3218
+        type: WOODEN_AXE
+        amount: 2
+    rarity: c
+    id: 2
 
 rarities:
-  - shortname: c
+  - ==: Rarity
+    shortname: c
     name: common
     probability: 40
-  - shortname: uc
+  - ==: Rarity
+    shortname: uc
     name: uncommon
     probability: 25
-  - shortname: r
+  - ==: Rarity
+    shortname: r
     name: rare
     probability: 20
-  - shortname: sr
+  - ==: Rarity
+    shortname: sr
     name: super rare
     probability: 10
-  - shortname: ur
+  - ==: Rarity
+    shortname: ur
     name: ultra rare
     probability: 5

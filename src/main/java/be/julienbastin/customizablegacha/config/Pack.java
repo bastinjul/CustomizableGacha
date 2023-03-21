@@ -2,36 +2,38 @@ package be.julienbastin.customizablegacha.config;
 
 import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.utils.ListUtils;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import static be.julienbastin.customizablegacha.CustomizableGacha.LOGGER;
 
+@SerializableAs("Pack")
 public class Pack extends ConfigurationModel {
 
     private static final String ID_KEY = "id";
     private static final String ITEMS_KEY = "items";
-    private static final String RARITY_KEY = "rarity";
+    public static final String RARITY_KEY = "rarity";
 
     private Integer id;
     private List<ItemStack> itemStackList;
     private String rarityShortName;
     private Rarity rarity;
 
-    public Pack(Map<?, ?> valueMap, CustomizableGacha plugin) {
+    public Pack() {}
+
+    public Pack(Map<?, ?> valueMap) {
         super(
                 valueMap,
                 Map.of(
                         ID_KEY, Pack::isIdValid,
-                        ITEMS_KEY, Pack::isItemStackValid,
-                        RARITY_KEY, Pack::isRarityValid
+                        ITEMS_KEY, Pack::isItemStackValid
                 ),
-                plugin
+                Set.of(ID_KEY, ITEMS_KEY, RARITY_KEY)
         );
     }
 
@@ -40,7 +42,7 @@ public class Pack extends ConfigurationModel {
         return Map.of(
                 ID_KEY, id,
                 ITEMS_KEY, itemStackList,
-                RARITY_KEY, rarity.getShortname()
+                RARITY_KEY, rarityShortName
         );
     }
 
@@ -48,7 +50,7 @@ public class Pack extends ConfigurationModel {
     protected void fillValues() {
         final Map<String, Consumer<Object>> setters = Map.of(
                 ID_KEY, val -> this.id = val instanceof Integer i ? i : null,
-                ITEMS_KEY, val -> this.itemStackList = val instanceof List<?> list ? ListUtils.loadList(list) : null,
+                ITEMS_KEY, val -> this.itemStackList = val instanceof List<?> list ? ListUtils.loadItemStackList(list) : null,
                 RARITY_KEY, val -> this.rarityShortName = val instanceof String s ? s : null
         );
         valueMap.forEach((key1, value) -> {
@@ -56,8 +58,6 @@ public class Pack extends ConfigurationModel {
                 setters.get(key).accept(value);
             }
         });
-        this.rarity = this.plugin.getRarities().get(this.rarityShortName);
-        this.rarity.addPack(this);
     }
 
     public Integer getId() {
@@ -68,12 +68,17 @@ public class Pack extends ConfigurationModel {
         this.id = id;
     }
 
-    public static boolean isIdValid(Object value, CustomizableGacha plugin) {
+    public static boolean isIdValid(Object value) {
         if (!(value instanceof Integer)) {
             LOGGER.log(Level.WARNING, "Pack's id should be a number. Got value {0}", value);
             return false;
         }
         return true;
+    }
+
+    public Pack id(Integer id) {
+        this.id = id;
+        return this;
     }
 
     public List<ItemStack> getItemStackList() {
@@ -84,7 +89,7 @@ public class Pack extends ConfigurationModel {
         this.itemStackList = itemStackList;
     }
 
-    public static boolean isItemStackValid(Object value, CustomizableGacha plugin) {
+    public static boolean isItemStackValid(Object value) {
         if(value instanceof List<?> list) {
             boolean areAllInstanceOfItemStack = true;
             for(Object o : list) {
@@ -103,6 +108,18 @@ public class Pack extends ConfigurationModel {
         return false;
     }
 
+    public Pack addItemStack(ItemStack itemStack) {
+        if(this.itemStackList == null) this.itemStackList = new ArrayList<>();
+        this.itemStackList.add(itemStack);
+        return this;
+    }
+
+    public Pack addAllItemStack(ItemStack... itemStackList) {
+        if(this.itemStackList == null) this.itemStackList = new ArrayList<>();
+        this.itemStackList.addAll(Arrays.asList(itemStackList));
+        return this;
+    }
+
     public String getRarityShortName() {
         return rarityShortName;
     }
@@ -111,7 +128,7 @@ public class Pack extends ConfigurationModel {
         this.rarityShortName = rarityShortName;
     }
 
-    public static boolean isRarityValid(Object value, CustomizableGacha plugin) {
+    public boolean checkRarityAndAddItToPackIfValid(Object value, CustomizableGacha plugin) {
         if (value instanceof String s) {
             if(plugin.getRarities().keySet().stream()
                     .filter(rarity -> rarity.equals(s))
@@ -127,6 +144,11 @@ public class Pack extends ConfigurationModel {
         return true;
     }
 
+    public Pack rarityShortName(String rarityShortName) {
+        this.rarityShortName = rarityShortName;
+        return this;
+    }
+
     public Rarity getRarity() {
         return rarity;
     }
@@ -135,10 +157,15 @@ public class Pack extends ConfigurationModel {
         this.rarity = rarity;
     }
 
+    public Pack rarity(Rarity rarity) {
+        this.rarity = rarity;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "[id=" + id + "," +
                 "items=" + itemStackList + "," +
-                "rarity=" + rarity.getName() + "]";
+                "rarity=" + rarityShortName + "]";
     }
 }

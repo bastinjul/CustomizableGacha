@@ -6,9 +6,6 @@ import com.google.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-
-import static be.julienbastin.customizablegacha.CustomizableGacha.LOGGER;
 
 public class GachaConfiguration {
 
@@ -37,38 +34,17 @@ public class GachaConfiguration {
         boolean isConfigValid = true;
         if(objectList != null) {
             for(Object o : objectList) {
-                if(o instanceof Map<?, ?> map) {
-                    if(path.equals("packs") && !this.fillPackList(map)) {
-                        isConfigValid = false;
-                    } else if(path.equals("rarities") && this.fillRarityList(map)) {
-                        isConfigValid = false;
-                    }
+                if(o instanceof Rarity rarity) {
+                    this.rarities.put(rarity.getShortname(), rarity);
+                } else if(o instanceof Pack pack) {
+                    this.packs.put(pack.getId(), pack);
+                    Rarity linkedRarity = this.rarities.get(pack.getRarityShortName());
+                    pack.setRarity(linkedRarity);
+                    linkedRarity.addPack(pack);
                 }
             }
         }
         return isConfigValid;
-    }
-
-    private boolean fillPackList(Map<?, ?> map) {
-        Pack pack = new Pack(map, plugin);
-        if(pack.isValueMapValid()) {
-            this.packs.put(pack.getId(), pack);
-        } else {
-            LOGGER.log(Level.SEVERE, "Invalid pack {0}", map);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean fillRarityList(Map<?, ?> map) {
-        Rarity rarity = new Rarity(map, plugin);
-        if(rarity.isValueMapValid()) {
-            this.rarities.put(rarity.getShortname(), rarity);
-        } else {
-            LOGGER.log(Level.SEVERE, "Invalid rarity {0}", map);
-            return false;
-        }
-        return true;
     }
 
     public Map<Integer, Pack> getPacks() {

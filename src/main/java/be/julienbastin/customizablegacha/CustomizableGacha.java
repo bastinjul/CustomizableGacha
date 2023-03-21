@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.bukkit.plugin.java.annotation.plugin.author.Authors;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -67,7 +68,9 @@ public class CustomizableGacha extends JavaPlugin {
         saveDefaultConfig();
         registerSerializers();
         registerCommands();
-        if(!this.gachaConfiguration.loadRaritiesFromConfiguration() && !this.gachaConfiguration.loadPacksFromConfiguration()) {
+        boolean isRarityConfigValid = this.gachaConfiguration.loadRaritiesFromConfiguration();
+        boolean isPackConfigValid = this.gachaConfiguration.loadPacksFromConfiguration();
+        if(!isRarityConfigValid && !isPackConfigValid) {
             super.getServer().getPluginManager().disablePlugin(this);
         }
     }
@@ -103,8 +106,8 @@ public class CustomizableGacha extends JavaPlugin {
     }
 
     private void registerSerializers() {
-        ConfigurationSerialization.registerClass(Pack.class);
-        ConfigurationSerialization.registerClass(Rarity.class);
+        ConfigurationSerialization.registerClass(Pack.class, "Pack");
+        ConfigurationSerialization.registerClass(Rarity.class, "Rarity");
     }
 
     public static Economy getEcon() {
@@ -138,6 +141,15 @@ public class CustomizableGacha extends JavaPlugin {
                 .filter(pack -> pack.getRarityShortName().equals(rarityShortname))
                 .map(Pack::toString)
                 .collect(Collectors.joining("\n"));
+    }
+
+    public Integer getNextPackId() {
+        Optional<Integer> maxId = this.gachaConfiguration.getPacks()
+                .values()
+                .stream()
+                .map(Pack::getId)
+                .max(Integer::compareTo);
+        return maxId.map(integer -> integer + 1).orElse(1);
     }
 
     public Map<String, Rarity> getRarities() {
