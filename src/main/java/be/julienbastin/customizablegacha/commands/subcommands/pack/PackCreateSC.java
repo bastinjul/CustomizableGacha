@@ -64,6 +64,9 @@ public class PackCreateSC extends SubCommand {
         this.plugin.getPacks().put(pack.getId(), pack);
         this.plugin.getConfig().set("packs", this.plugin.getPacks().values().stream().toList());
         this.plugin.saveConfig();
+        sender.sendMessage("Pack created!");
+        sender.sendMessage("Item : " + material.name());
+        sender.sendMessage("Quantity : " + quantity);
         return true;
     }
 

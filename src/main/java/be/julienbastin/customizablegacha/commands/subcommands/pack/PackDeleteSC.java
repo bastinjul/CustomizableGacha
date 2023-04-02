@@ -29,13 +29,33 @@ public class PackDeleteSC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
+        if(args.length != 1) {
+            sender.sendMessage("Usage : /czgacha pack delete <packId>");
+            return false;
+        }
+        Integer packId = null;
+        try {
+            packId = Integer.parseInt(args[0]);
+            if(!this.plugin.getPacks().containsKey(packId)) {
+                sender.sendMessage("Usage : /czgacha pack delete <packId>");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            sender.sendMessage("Usage : /czgacha pack delete <packId>");
+            return false;
+        }
+        this.plugin.getPacks().remove(packId);
+        this.plugin.getConfig().set("packs", this.plugin.getPacks().values().stream().toList());
+        this.plugin.saveConfig();
+        sender.sendMessage("Pack deleted!");
         return true;
     }
 
     @Override
     public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
+        if(args.length == 1) {
+            return this.plugin.getPacks().keySet().stream().map(Object::toString).toList();
+        }
         return null;
     }
 }
