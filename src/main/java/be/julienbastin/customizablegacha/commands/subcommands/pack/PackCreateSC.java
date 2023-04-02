@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class PackCreateSC extends SubCommand {
 
@@ -36,8 +37,8 @@ public class PackCreateSC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length != 3) {
-            return this.sendUsageMessage(sender, "Usage : /czgacha pack create <rarity> <item name> <quantity>");
+        if(args.length < 3 || (args.length - 1) % 2 != 0) {
+            return this.sendUsageMessage(sender, "Usage : /czgacha pack create <rarity> [<item name> <quantity>]");
         }
         Rarity rarity = null;
         if(!this.plugin.getRarities().containsKey(args[0])) {
@@ -45,29 +46,43 @@ public class PackCreateSC extends SubCommand {
         } else {
             rarity = this.plugin.getRarities().get(args[0]);
         }
-        Material material = Material.getMaterial(args[1]);
-        if(material == null) return this.sendUsageMessage(sender, "Incorrect material");
-        int quantity = -1;
-        try {
-            quantity = Integer.parseInt(args[2]);
-            if(quantity <= 0 || quantity > 640) {
-                return sendUsageMessage(sender, "Quantity should be between 1 and 640");
-            }
-        } catch (NumberFormatException e) {
-            return sendUsageMessage(sender, "You must enter a number as quantity");
-        }
         Pack pack = new Pack()
                 .id(this.plugin.getNextPackId())
-                .addItemStack(new ItemStack(material, quantity))
                 .rarityShortName(rarity.getShortname())
                 .rarity(rarity);
+        for(int i = 1; i+1 < args.length; i = i +2) {
+            Optional<ItemStack> optionalItemStack = this.getPackFromArguments(args[i], args[i+1], rarity, sender);
+            if(optionalItemStack.isPresent()) {
+                pack.addItemStack(optionalItemStack.get());
+            } else {
+                return false;
+            }
+        }
         this.plugin.getPacks().put(pack.getId(), pack);
         this.plugin.getConfig().set("packs", this.plugin.getPacks().values().stream().toList());
         this.plugin.saveConfig();
         sender.sendMessage("Pack created!");
-        sender.sendMessage("Item : " + material.name());
-        sender.sendMessage("Quantity : " + quantity);
         return true;
+    }
+
+    private Optional<ItemStack> getPackFromArguments(String itemName, String quantityStr, Rarity rarity, CommandSender sender) {
+        Material material = Material.getMaterial(itemName);
+        if(material == null) {
+            sender.sendMessage("Incorrect material");
+            return Optional.empty();
+        }
+        int quantity = -1;
+        try {
+            quantity = Integer.parseInt(quantityStr);
+            if(quantity <= 0 || quantity > 640) {
+                sender.sendMessage("Quantity should be between 1 and 640");
+                return Optional.empty();
+            }
+        } catch (NumberFormatException e) {
+            sender.sendMessage("You must enter a number as quantity");
+            return Optional.empty();
+        }
+        return Optional.of(new ItemStack(material, quantity));
     }
 
     private boolean sendUsageMessage(@NotNull CommandSender sender, @NotNull String message) {
@@ -79,18 +94,18 @@ public class PackCreateSC extends SubCommand {
     public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1) {
             return this.plugin.getRarities().keySet().stream().toList();
-        } else if(args.length == 2) {
+        } else if(args.length % 2 == 0) {
             return Arrays
                     .stream(Material.values())
                     .map(Enum::name)
                     .filter(s -> {
-                        if(StringUtils.isBlank(args[1])) {
+                        if(StringUtils.isBlank(args[args.length - 1])) {
                             return true;
                         } else {
-                            return s.startsWith(args[1]);
+                            return s.startsWith(args[args.length - 1]);
                         }
                     }).toList();
-        } else if(args.length == 3 && StringUtils.isBlank(args[2])) {
+        } else if(StringUtils.isBlank(args[args.length - 1])) {
             return Collections.singletonList("<quantity>");
         }
         return Collections.emptyList();
