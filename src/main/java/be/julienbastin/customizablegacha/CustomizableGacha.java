@@ -134,6 +134,14 @@ public class CustomizableGacha extends JavaPlugin {
                 .collect(Collectors.joining("\n"));
     }
 
+    public String getAllRaritiesString() {
+        return this.gachaConfiguration.getRarities()
+                .values()
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.joining("\n"));
+    }
+
     public String getPacksByRarityString(String rarityShortname) {
         return this.gachaConfiguration.getPacks()
                 .values()

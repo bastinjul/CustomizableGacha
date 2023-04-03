@@ -2,7 +2,7 @@ package be.julienbastin.customizablegacha.commands.subcommands.pack.get;
 
 import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
-import org.bukkit.ChatColor;
+import be.julienbastin.customizablegacha.utils.ChatUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.ChatPaginator;
@@ -44,16 +44,7 @@ public class PackGetAllSC extends SubCommand {
             return false;
         }
         ChatPaginator.ChatPage page = getPage(pageNumber);
-        StringBuilder message = new StringBuilder();
-        message.append(ChatColor.YELLOW).append("----------- ");
-        message.append(ChatColor.WHITE).append("All packs index (")
-                .append(page.getPageNumber()).append("/").append(page.getTotalPages())
-                .append(")");
-        message.append(ChatColor.YELLOW).append("----------- ").append("\n").append(ChatColor.WHITE);
-        for(String line : page.getLines()) {
-            message.append(line).append("\n");
-        }
-        sender.sendMessage(message.toString());
+        sender.sendMessage(ChatUtils.getFormattedMessageWithMultiplePage(page, "packs"));
         return true;
     }
 
