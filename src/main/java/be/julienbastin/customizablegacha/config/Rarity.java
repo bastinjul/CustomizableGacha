@@ -24,6 +24,10 @@ public class Rarity extends ConfigurationModel {
     private Integer probability;
     private final List<Pack> packs;
 
+    public Rarity() {
+        this.packs = new ArrayList<>();
+    }
+
     public Rarity(@NotNull Map<?, ?> valueMap) {
         super(
                 valueMap,
@@ -68,6 +72,11 @@ public class Rarity extends ConfigurationModel {
         this.shortname = shortname;
     }
 
+    public Rarity shortname(String shortname) {
+        this.shortname = shortname;
+        return this;
+    }
+
     public static boolean isShortNameValid(Object value) {
         if(!(value instanceof String)) {
             LOGGER.log(Level.WARNING, "Rarity's shortname should be a String. Got value {0}", value);
@@ -84,6 +93,11 @@ public class Rarity extends ConfigurationModel {
         this.name = name;
     }
 
+    public Rarity name(String name) {
+        this.name = name;
+        return this;
+    }
+
     public static boolean isNameValid(Object value) {
         if(!(value instanceof String)) {
             LOGGER.log(Level.WARNING, "Rarity's name should be a String. Got value {0}", value);
@@ -98,6 +112,11 @@ public class Rarity extends ConfigurationModel {
 
     public void setProbability(Integer probability) {
         this.probability = probability;
+    }
+
+    public Rarity probability(Integer probability) {
+        this.probability = probability;
+        return this;
     }
 
     public static boolean isProbabilityValid(Object value) {

@@ -35,7 +35,7 @@ public class RarityGetSC extends SubCommand {
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 0) {
-            sender.sendMessage("Usage : /czgacha pack get <all [pageNumber] | pack-id>");
+            sender.sendMessage("Usage : /czgacha rarity get <all [pageNumber] | pack-id>");
         } else if(args.length == 1 || args.length == 2) {
             if(args[0].equalsIgnoreCase("all")) {
                 if(args.length == 1) return this.sendAllRaritiesMessage(sender, "1");
@@ -66,7 +66,7 @@ public class RarityGetSC extends SubCommand {
             if(StringUtils.isNotBlank(pageNumberStr)) pageNumber = Integer.parseInt(pageNumberStr)+1;
         } catch (NumberFormatException e) {
             sender.sendMessage("Invalid page number");
-            sender.sendMessage("Usage : /czgacha pack get <all | pack-id> [pageNumber]");
+            sender.sendMessage("Usage : /czgacha rarity get <all | pack-id> [pageNumber]");
             return false;
         }
         ChatPaginator.ChatPage page = this.getPage(pageNumber);

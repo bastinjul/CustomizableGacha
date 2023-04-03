@@ -2,6 +2,8 @@ package be.julienbastin.customizablegacha.commands.subcommands.rarity;
 
 import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
+import be.julienbastin.customizablegacha.config.Rarity;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +31,38 @@ public class RarityCreateSC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
+        if(args.length != 2) {
+            sender.sendMessage("Usage : /czgacha rarity create <name> <shortname>");
+            return false;
+        }
+        if(this.plugin.getRarities().values().stream().anyMatch(r -> r.getName().equals(args[0]))) {
+            sender.sendMessage("The name already exists");
+            return false;
+        }
+        if(this.plugin.getRarities().containsKey(args[1])) {
+            sender.sendMessage("The shortname already exists");
+            return false;
+        }
+        Rarity rarity = new Rarity()
+                .name(args[0])
+                .shortname(args[1])
+                .probability(0);
+        this.plugin.getRarities().put(args[1], rarity);
+        this.plugin.getConfig().set("rarities", this.plugin.getRarities().values().stream().toList());
+        this.plugin.saveConfig();
+        sender.sendMessage(ChatColor.DARK_GREEN + "Rarity created with probability 0!");
+        sender.sendMessage("To modify the probability, use the modify functionality.");
+        sender.sendMessage(RarityModifySC.getUsage());
         return true;
     }
 
     @Override
     public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
+        if(args.length == 1) {
+            return List.of("<name>");
+        } else if(args.length == 2) {
+            return List.of("<shortname>");
+        }
         return null;
     }
 }
