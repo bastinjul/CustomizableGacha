@@ -4,7 +4,10 @@ import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.MultiSC;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.SingleSC;
-import be.julienbastin.customizablegacha.commands.subcommands.pack.*;
+import be.julienbastin.customizablegacha.commands.subcommands.pack.PackCreateSC;
+import be.julienbastin.customizablegacha.commands.subcommands.pack.PackDeleteSC;
+import be.julienbastin.customizablegacha.commands.subcommands.pack.PackGetSC;
+import be.julienbastin.customizablegacha.commands.subcommands.pack.PackSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.get.PackGetAllSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.get.PackGetByIdSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.get.PackGetByRaritySC;
@@ -42,11 +45,9 @@ import java.util.List;
 @Permission(name = PackSC.PERMISSION, desc = "Pack management rights", defaultValue = PermissionDefault.OP, children = {
         @ChildPermission(name = PackGetSC.PERMISSION),
         @ChildPermission(name = PackCreateSC.PERMISSION),
-        @ChildPermission(name = PackModifySC.PERMISSION),
         @ChildPermission(name = PackDeleteSC.PERMISSION)
 })
 @Permission(name = PackCreateSC.PERMISSION, desc = "Creation of new packs", defaultValue = PermissionDefault.OP)
-@Permission(name = PackModifySC.PERMISSION, desc = "Modification of existing pack", defaultValue = PermissionDefault.OP)
 @Permission(name = PackDeleteSC.PERMISSION, desc = "Deletion of existing pack", defaultValue = PermissionDefault.OP)
 @Permission(name = PackGetSC.PERMISSION, desc = "Get the list of packs possible to draw", defaultValue = PermissionDefault.TRUE, children = {
         @ChildPermission(name = PackGetAllSC.PERMISSION),

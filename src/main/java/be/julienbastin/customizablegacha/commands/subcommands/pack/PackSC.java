@@ -18,8 +18,7 @@ public class PackSC extends SubCommand{
         super.subCommands = List.of(
                 new PackCreateSC(syntax(), plugin),
                 new PackDeleteSC(syntax(), plugin),
-                new PackGetSC(syntax(), plugin),
-                new PackModifySC(syntax(), plugin)
+                new PackGetSC(syntax(), plugin)
         );
     }
 
