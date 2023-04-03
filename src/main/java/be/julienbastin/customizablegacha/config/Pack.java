@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static be.julienbastin.customizablegacha.CustomizableGacha.LOGGER;
 
@@ -164,8 +165,8 @@ public class Pack extends ConfigurationModel {
 
     @Override
     public String toString() {
-        return "[id=" + id + "," +
-                "items=" + itemStackList + "," +
-                "rarity=" + rarityShortName + "]";
+        return "- id=" + id + "," +
+                "rarity=" + rarityShortName + "," +
+                "items=\n[" + itemStackList.stream().map(Object::toString).collect(Collectors.joining("\n")) + "]";
     }
 }
