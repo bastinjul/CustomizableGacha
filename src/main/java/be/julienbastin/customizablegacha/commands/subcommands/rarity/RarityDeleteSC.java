@@ -2,6 +2,7 @@ package be.julienbastin.customizablegacha.commands.subcommands.rarity;
 
 import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +30,27 @@ public class RarityDeleteSC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
+        if(args.length != 1) {
+            sender.sendMessage("Usage : /czgacha rarity delete <rarity-id>");
+            return false;
+        }
+        if(!this.plugin.getRarities().containsKey(args[0])) {
+            sender.sendMessage(ChatColor.RED + "Rarity does not exist");
+            sender.sendMessage("Usage : /czgacha rarity delete <rarity-id>");
+            return false;
+        }
+        this.plugin.getRarities().remove(args[0]);
+        this.plugin.getConfig().set("rarities", this.plugin.getRarities().values().stream().toList());
+        this.plugin.saveConfig();
+        sender.sendMessage("Rarity deleted!");
         return true;
     }
 
     @Override
     public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        //TODO
+        if(args.length == 1) {
+            return this.plugin.getRarities().keySet().stream().map(Object::toString).toList();
+        }
         return null;
     }
 }
