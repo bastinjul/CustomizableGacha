@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class GachaConfiguration {
 
@@ -21,7 +22,7 @@ public class GachaConfiguration {
 
     public boolean loadRaritiesFromConfiguration() {
         this.rarities = new HashMap<>();
-        return this.loadConfiguration("rarities");
+        return this.loadConfiguration("rarities") && this.isTotalProbabilityEqualTo100();
     }
 
     public boolean loadPacksFromConfiguration() {
@@ -61,5 +62,18 @@ public class GachaConfiguration {
 
     public void setRarities(Map<String, Rarity> rarities) {
         this.rarities = rarities;
+    }
+
+    private boolean isTotalProbabilityEqualTo100() {
+       int totalProbability = this.rarities.values()
+                .stream()
+                .map(Rarity::getProbability)
+                .reduce(0, Integer::sum);
+        if(totalProbability != 100) {
+            this.plugin.getLogger().log(Level.WARNING, "The total probability of the rarities should be equal to 100!");
+            this.plugin.getLogger().log(Level.WARNING, "The total probability of your config is equal to " + totalProbability);
+            return false;
+        }
+        return true;
     }
 }

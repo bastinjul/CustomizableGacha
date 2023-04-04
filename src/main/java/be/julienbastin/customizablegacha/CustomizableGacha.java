@@ -55,9 +55,8 @@ public class CustomizableGacha extends JavaPlugin {
     @Override
     public void onEnable() {
         if(!setupEconomy()) {
-            LOGGER.log(Level.SEVERE, "Disabled due to no Vault dependency found! " +
-                    "You need to add an economy plugin that implements Vault, such as EssentialsX");
-            super.getServer().getPluginManager().disablePlugin(this);
+            this.disablePlugin("Disabled due to no Vault dependency found! " +
+                    "You need to add an economy plugin that implements Vault, such as EssentialsX.");
             return;
         }
         setupPermissions(); //if mandatory, disable plugin
@@ -70,9 +69,14 @@ public class CustomizableGacha extends JavaPlugin {
         registerCommands();
         boolean isRarityConfigValid = this.gachaConfiguration.loadRaritiesFromConfiguration();
         boolean isPackConfigValid = this.gachaConfiguration.loadPacksFromConfiguration();
-        if(!isRarityConfigValid && !isPackConfigValid) {
-            super.getServer().getPluginManager().disablePlugin(this);
+        if(!isRarityConfigValid || !isPackConfigValid) {
+            this.disablePlugin("Your configuration is invalid! Please check the previous messages to see what is wrong.");
         }
+    }
+
+    private void disablePlugin(String message) {
+        LOGGER.log(Level.SEVERE, message);
+        super.getServer().getPluginManager().disablePlugin(this);
     }
 
     private void registerCommands() {
