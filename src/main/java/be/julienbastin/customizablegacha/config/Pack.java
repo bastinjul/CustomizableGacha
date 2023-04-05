@@ -19,10 +19,12 @@ public class Pack extends ConfigurationModel {
     private static final String ID_KEY = "id";
     private static final String ITEMS_KEY = "items";
     public static final String RARITY_KEY = "rarity";
+    public static final String QUANTITY_KEY = "quantity";
 
     private Integer id;
     private List<ItemStack> itemStackList;
     private String rarityShortName;
+    private Integer quantity;
     private Rarity rarity;
 
     public Pack() {}
@@ -32,9 +34,10 @@ public class Pack extends ConfigurationModel {
                 valueMap,
                 Map.of(
                         ID_KEY, Pack::isIdValid,
-                        ITEMS_KEY, Pack::isItemStackValid
+                        ITEMS_KEY, Pack::isItemStackValid,
+                        QUANTITY_KEY, Pack::isQuantityValid
                 ),
-                Set.of(ID_KEY, ITEMS_KEY, RARITY_KEY)
+                Set.of(ID_KEY, ITEMS_KEY, RARITY_KEY, QUANTITY_KEY)
         );
     }
 
@@ -43,7 +46,8 @@ public class Pack extends ConfigurationModel {
         return Map.of(
                 ID_KEY, id,
                 ITEMS_KEY, itemStackList,
-                RARITY_KEY, rarityShortName
+                RARITY_KEY, rarityShortName,
+                QUANTITY_KEY, quantity
         );
     }
 
@@ -52,7 +56,8 @@ public class Pack extends ConfigurationModel {
         final Map<String, Consumer<Object>> setters = Map.of(
                 ID_KEY, val -> this.id = val instanceof Integer i ? i : null,
                 ITEMS_KEY, val -> this.itemStackList = val instanceof List<?> list ? ListUtils.loadItemStackList(list) : null,
-                RARITY_KEY, val -> this.rarityShortName = val instanceof String s ? s : null
+                RARITY_KEY, val -> this.rarityShortName = val instanceof String s ? s : null,
+                QUANTITY_KEY, val -> this.quantity = val instanceof Integer i ? i : null
         );
         valueMap.forEach((key1, value) -> {
             if (key1 instanceof String key && setters.containsKey(key)) {
@@ -150,6 +155,27 @@ public class Pack extends ConfigurationModel {
         return this;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public static boolean isQuantityValid(Object value) {
+        if (!(value instanceof Integer)) {
+            LOGGER.log(Level.WARNING, "Pack's quantity should be a number. Got value {0}", value);
+            return false;
+        }
+        return true;
+    }
+
+    public Pack quantity(Integer quantity) {
+        this.quantity = quantity;
+        return this;
+    }
+
     public Rarity getRarity() {
         return rarity;
     }
@@ -167,6 +193,7 @@ public class Pack extends ConfigurationModel {
     public String toString() {
         return "- id=" + id + "," +
                 "rarity=" + rarityShortName + "," +
+                "quantity=" + quantity + "," +
                 "items=\n[" + itemStackList.stream().map(Object::toString).collect(Collectors.joining("\n")) + "]";
     }
 }

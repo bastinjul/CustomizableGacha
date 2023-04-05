@@ -37,8 +37,8 @@ public class PackCreateSC extends SubCommand {
 
     @Override
     public boolean perform(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length < 3 || (args.length - 1) % 2 != 0) {
-            return this.sendUsageMessage(sender, "Usage : /czgacha pack create <rarity> [<item name> <quantity>]");
+        if(args.length < 4 || (args.length - 1) % 2 != 1) {
+            return this.sendUsageMessage(sender, "Usage : /czgacha pack create <rarity> <pack-quantity> [<item name> <item-quantity>]");
         }
         Rarity rarity = null;
         if(!this.plugin.getRarities().containsKey(args[0])) {
@@ -46,11 +46,18 @@ public class PackCreateSC extends SubCommand {
         } else {
             rarity = this.plugin.getRarities().get(args[0]);
         }
+        Integer quantity = null;
+        try {
+            quantity = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            return this.sendUsageMessage(sender, "Incorrect pack quantity");
+        }
         Pack pack = new Pack()
                 .id(this.plugin.getNextPackId())
                 .rarityShortName(rarity.getShortname())
-                .rarity(rarity);
-        for(int i = 1; i+1 < args.length; i = i +2) {
+                .rarity(rarity)
+                .quantity(quantity);
+        for(int i = 2; i+1 < args.length; i = i + 2) {
             Optional<ItemStack> optionalItemStack = this.getPackFromArguments(args[i], args[i+1], rarity, sender);
             if(optionalItemStack.isPresent()) {
                 pack.addItemStack(optionalItemStack.get());
@@ -94,7 +101,9 @@ public class PackCreateSC extends SubCommand {
     public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1) {
             return this.plugin.getRarities().keySet().stream().toList();
-        } else if(args.length % 2 == 0) {
+        } else if (args.length == 2) {
+            return List.of("<pack-quantity>");
+        } else if(args.length % 2 == 1) {
             return Arrays
                     .stream(Material.values())
                     .map(Enum::name)
@@ -106,7 +115,7 @@ public class PackCreateSC extends SubCommand {
                         }
                     }).toList();
         } else if(StringUtils.isBlank(args[args.length - 1])) {
-            return Collections.singletonList("<quantity>");
+            return Collections.singletonList("<item-quantity>");
         }
         return Collections.emptyList();
     }

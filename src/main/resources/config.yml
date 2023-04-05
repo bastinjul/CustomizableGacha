@@ -8,6 +8,7 @@ packs:
         v: 3218
         type: DIAMOND
     rarity: r
+    quantity: 20
     id: 1
   - ==: Pack
     items:
@@ -16,6 +17,7 @@ packs:
         type: WOODEN_AXE
         amount: 2
     rarity: c
+    quantity: 10
     id: 2
 
 rarities:
