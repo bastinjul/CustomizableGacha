@@ -4,6 +4,8 @@ import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.MultiSC;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.SingleSC;
+import be.julienbastin.customizablegacha.commands.subcommands.draw.prize.MultiPriceSC;
+import be.julienbastin.customizablegacha.commands.subcommands.draw.prize.SinglePriceSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.PackCreateSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.PackDeleteSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.PackGetSC;
@@ -38,8 +40,12 @@ import java.util.List;
 })
 
 //draw permissions
-@Permission(name = SingleSC.PERMISSION, desc = "Draw of a single pack", defaultValue = PermissionDefault.TRUE)
-@Permission(name = MultiSC.PERMISSION, desc = "Draw of multiple packs", defaultValue = PermissionDefault.TRUE)
+@Permission(name = SingleSC.PERMISSION, desc = "Draw of a single pack", defaultValue = PermissionDefault.TRUE, children = {
+        @ChildPermission(name = SinglePriceSC.PERMISSION)
+})
+@Permission(name = MultiSC.PERMISSION, desc = "Draw of multiple packs", defaultValue = PermissionDefault.TRUE, children = {
+        @ChildPermission(name = MultiPriceSC.PERMISSION)
+})
 
 //pack management permissions
 @Permission(name = PackSC.PERMISSION, desc = "Pack management rights", defaultValue = PermissionDefault.OP, children = {

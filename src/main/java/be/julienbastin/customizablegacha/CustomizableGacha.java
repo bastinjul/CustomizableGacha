@@ -1,9 +1,7 @@
 package be.julienbastin.customizablegacha;
 
 import be.julienbastin.customizablegacha.commands.GachaCommand;
-import be.julienbastin.customizablegacha.config.GachaConfiguration;
-import be.julienbastin.customizablegacha.config.Pack;
-import be.julienbastin.customizablegacha.config.Rarity;
+import be.julienbastin.customizablegacha.config.*;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import net.milkbowl.vault.chat.Chat;
@@ -69,7 +67,9 @@ public class CustomizableGacha extends JavaPlugin {
         registerCommands();
         boolean isRarityConfigValid = this.gachaConfiguration.loadRaritiesFromConfiguration();
         boolean isPackConfigValid = this.gachaConfiguration.loadPacksFromConfiguration();
-        if(!isRarityConfigValid || !isPackConfigValid) {
+        boolean isMultiDrawValid = this.gachaConfiguration.loadMultiDraw();
+        boolean isSingleDrawValid = this.gachaConfiguration.loadSingleDraw();
+        if(!isRarityConfigValid || !isPackConfigValid || !isMultiDrawValid || !isSingleDrawValid) {
             this.disablePlugin("Your configuration is invalid! Please check the previous messages to see what is wrong.");
         }
     }
@@ -112,6 +112,8 @@ public class CustomizableGacha extends JavaPlugin {
     private void registerSerializers() {
         ConfigurationSerialization.registerClass(Pack.class, "Pack");
         ConfigurationSerialization.registerClass(Rarity.class, "Rarity");
+        ConfigurationSerialization.registerClass(MultiDraw.class, "MultiDraw");
+        ConfigurationSerialization.registerClass(SingleDraw.class, "SingleDraw");
     }
 
     public static Economy getEcon() {
@@ -162,6 +164,14 @@ public class CustomizableGacha extends JavaPlugin {
                 .map(Pack::getId)
                 .max(Integer::compareTo);
         return maxId.map(integer -> integer + 1).orElse(1);
+    }
+
+    public SingleDraw getSingleDraw() {
+        return this.gachaConfiguration.getSingleDraw();
+    }
+
+    public MultiDraw getMultiDraw() {
+        return this.gachaConfiguration.getMultiDraw();
     }
 
     public Map<String, Rarity> getRarities() {

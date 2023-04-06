@@ -1,4 +1,9 @@
+single-draw:
+  ==: SingleDraw
+  price: 10
 multi-draw:
+  ==: MultiDraw
+  price: 95
   quantity: 10
 
 packs:

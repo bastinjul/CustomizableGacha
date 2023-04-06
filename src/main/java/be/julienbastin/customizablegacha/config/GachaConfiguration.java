@@ -15,6 +15,10 @@ public class GachaConfiguration {
     private Map<Integer, Pack> packs;
     private Map<String, Rarity> rarities;
 
+    private SingleDraw singleDraw;
+
+    private MultiDraw multiDraw;
+
     @Inject
     public GachaConfiguration(CustomizableGacha plugin) {
         this.plugin = plugin;
@@ -75,5 +79,43 @@ public class GachaConfiguration {
             return false;
         }
         return true;
+    }
+
+    public SingleDraw getSingleDraw() {
+        return singleDraw;
+    }
+
+    public void setSingleDraw(SingleDraw singleDraw) {
+        this.singleDraw = singleDraw;
+    }
+
+    public MultiDraw getMultiDraw() {
+        return multiDraw;
+    }
+
+    public void setMultiDraw(MultiDraw multiDraw) {
+        this.multiDraw = multiDraw;
+    }
+
+    public boolean loadMultiDraw() {
+        Object o = this.plugin.getConfig().get("multi-draw");
+        if(o instanceof MultiDraw m && m.isValid()) {
+            this.multiDraw = m;
+            this.plugin.getLogger().log(Level.INFO, "Multi Draw : {0}", multiDraw);
+            return true;
+        }
+        this.plugin.getLogger().log(Level.WARNING, "multi-draw configuration is not valid");
+        return false;
+    }
+
+    public boolean loadSingleDraw() {
+        Object o = this.plugin.getConfig().get("single-draw");
+        if(o instanceof SingleDraw s && s.isValid()) {
+            this.singleDraw = s;
+            this.plugin.getLogger().log(Level.INFO, "Single Draw : {0}", singleDraw);
+            return true;
+        }
+        this.plugin.getLogger().log(Level.WARNING, "single-draw configuration is not valid");
+        return false;
     }
 }
