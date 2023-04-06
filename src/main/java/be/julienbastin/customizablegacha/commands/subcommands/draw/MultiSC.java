@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MultiSC extends DrawSC {
 
-    public static final String PERMISSION = "czgacha.multi";
+    public static final String PERMISSION = "czgacha.multi.draw";
 
     public MultiSC(String parentCommand, CustomizableGacha plugin) {
         super(parentCommand, plugin, PERMISSION);

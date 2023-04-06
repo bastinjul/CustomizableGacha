@@ -20,7 +20,8 @@ public abstract class DrawSC extends SubCommand {
         if(args.length == 0) {
             this.draw();
             return true;
-        } else if(args.length == 1 || args.length == 2) {
+        } else if(
+                (args.length == 1 || args.length == 2) && this.hasSubcommandPermission().test(sender)) {
             super.perform(sender, command, label, args);
             return true;
         }
@@ -34,7 +35,10 @@ public abstract class DrawSC extends SubCommand {
 
     @Override
     public @Nullable List<String> autoComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return super.autoComplete(sender, command, label, args);
+        if(this.hasSubcommandPermission().test(sender)) {
+            return super.autoComplete(sender, command, label, args);
+        }
+        return null;
     }
 
     protected abstract void draw();

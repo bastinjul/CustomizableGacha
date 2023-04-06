@@ -93,6 +93,12 @@ public abstract class SubCommand extends GachaTabExecutor {
         return (c) -> c.hasPermission(permission);
     }
 
+    public Predicate<CommandSender> hasSubcommandPermission() {
+        return (sender) -> this.subCommands.stream()
+                .map(sc -> sender.hasPermission(sc.getPermissions()))
+                .reduce(true, Boolean::logicalAnd);
+    }
+
     public String selfSyntaxDescription(CommandSender commandSender) {
         if(hasPermissions().test(commandSender)) {
             return syntax() + " :: " + description() + "\n";

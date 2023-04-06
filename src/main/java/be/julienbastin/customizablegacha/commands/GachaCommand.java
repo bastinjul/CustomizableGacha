@@ -35,17 +35,17 @@ import java.util.List;
 @Permission(name = "czgacha.*", desc = "Access to all commands", defaultValue = PermissionDefault.OP, children = {
         @ChildPermission(name = SingleSC.PERMISSION),
         @ChildPermission(name = MultiSC.PERMISSION),
+        @ChildPermission(name = SinglePriceSC.PERMISSION),
+        @ChildPermission(name = MultiPriceSC.PERMISSION),
         @ChildPermission(name = PackSC.PERMISSION),
         @ChildPermission(name = RaritySC.PERMISSION)
 })
 
 //draw permissions
-@Permission(name = SingleSC.PERMISSION, desc = "Draw of a single pack", defaultValue = PermissionDefault.TRUE, children = {
-        @ChildPermission(name = SinglePriceSC.PERMISSION)
-})
-@Permission(name = MultiSC.PERMISSION, desc = "Draw of multiple packs", defaultValue = PermissionDefault.TRUE, children = {
-        @ChildPermission(name = MultiPriceSC.PERMISSION)
-})
+@Permission(name = SingleSC.PERMISSION, desc = "Draw of a single pack", defaultValue = PermissionDefault.TRUE)
+@Permission(name = SinglePriceSC.PERMISSION, desc = "Configure single draw price", defaultValue = PermissionDefault.OP)
+@Permission(name = MultiSC.PERMISSION, desc = "Draw of multiple packs", defaultValue = PermissionDefault.TRUE)
+@Permission(name = MultiPriceSC.PERMISSION, desc = "Configure multi draw price", defaultValue = PermissionDefault.OP)
 
 //pack management permissions
 @Permission(name = PackSC.PERMISSION, desc = "Pack management rights", defaultValue = PermissionDefault.OP, children = {

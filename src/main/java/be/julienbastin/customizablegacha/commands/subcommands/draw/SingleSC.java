@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SingleSC extends DrawSC {
 
-    public static final String PERMISSION = "czgacha.single";
+    public static final String PERMISSION = "czgacha.single.draw";
 
     public SingleSC(String parentCommand, CustomizableGacha plugin) {
         super(parentCommand, plugin, PERMISSION);
