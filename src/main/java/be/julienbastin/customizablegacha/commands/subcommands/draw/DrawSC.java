@@ -25,8 +25,8 @@ public abstract class DrawSC extends SubCommand {
             super.perform(sender, command, label, args);
             return true;
         }
-        if(sender.hasPermission(this.permission)) {
-            sender.sendMessage(priceUsage());
+        if(this.hasSubcommandPermission().test(sender)) {
+            sender.sendMessage(subCommandUsage());
         } else {
             sender.sendMessage(drawUsage());
         }
@@ -43,7 +43,7 @@ public abstract class DrawSC extends SubCommand {
 
     protected abstract void draw();
 
-    protected abstract String priceUsage();
+    protected abstract String subCommandUsage();
 
     protected abstract String drawUsage();
 }

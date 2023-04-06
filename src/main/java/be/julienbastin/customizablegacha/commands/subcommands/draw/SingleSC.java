@@ -44,7 +44,7 @@ public class SingleSC extends DrawSC {
     }
 
     @Override
-    protected String priceUsage() {
+    protected String subCommandUsage() {
         return "Usage : /czgacha single price <price>";
     }
 

@@ -6,6 +6,7 @@ import be.julienbastin.customizablegacha.commands.subcommands.draw.MultiSC;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.SingleSC;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.prize.MultiPriceSC;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.prize.SinglePriceSC;
+import be.julienbastin.customizablegacha.commands.subcommands.draw.quantity.MultiQuantitySC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.PackCreateSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.PackDeleteSC;
 import be.julienbastin.customizablegacha.commands.subcommands.pack.PackGetSC;
@@ -46,6 +47,7 @@ import java.util.List;
 @Permission(name = SinglePriceSC.PERMISSION, desc = "Configure single draw price", defaultValue = PermissionDefault.OP)
 @Permission(name = MultiSC.PERMISSION, desc = "Draw of multiple packs", defaultValue = PermissionDefault.TRUE)
 @Permission(name = MultiPriceSC.PERMISSION, desc = "Configure multi draw price", defaultValue = PermissionDefault.OP)
+@Permission(name = MultiQuantitySC.PERMISSION, desc = "Quantity of pack for a multi draw configuration", defaultValue = PermissionDefault.OP)
 
 //pack management permissions
 @Permission(name = PackSC.PERMISSION, desc = "Pack management rights", defaultValue = PermissionDefault.OP, children = {

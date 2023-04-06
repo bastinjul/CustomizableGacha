@@ -2,6 +2,7 @@ package be.julienbastin.customizablegacha.commands.subcommands.draw;
 
 import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.draw.prize.MultiPriceSC;
+import be.julienbastin.customizablegacha.commands.subcommands.draw.quantity.MultiQuantitySC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,10 @@ public class MultiSC extends DrawSC {
 
     public MultiSC(String parentCommand, CustomizableGacha plugin) {
         super(parentCommand, plugin, PERMISSION);
-        this.subCommands = List.of(new MultiPriceSC(syntax(), plugin));
+        this.subCommands = List.of(
+                new MultiPriceSC(syntax(), plugin),
+                new MultiQuantitySC(syntax(), plugin)
+        );
     }
 
     @Override
@@ -44,8 +48,8 @@ public class MultiSC extends DrawSC {
     }
 
     @Override
-    protected String priceUsage() {
-        return "Usage : /czgacha multi price <price>";
+    protected String subCommandUsage() {
+        return "Usage : /czgacha multi [price <price> | quantity <quantity]";
     }
 
     @Override
