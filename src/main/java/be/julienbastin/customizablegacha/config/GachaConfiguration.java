@@ -13,6 +13,7 @@ public class GachaConfiguration {
     private CustomizableGacha plugin;
 
     private Map<Integer, Pack> packs;
+    private int maxItemStacksInOnePack = 1;
     private Map<String, Rarity> rarities;
 
     private SingleDraw singleDraw;
@@ -42,14 +43,30 @@ public class GachaConfiguration {
                 if(o instanceof Rarity rarity) {
                     this.rarities.put(rarity.getShortname(), rarity);
                 } else if(o instanceof Pack pack) {
-                    this.packs.put(pack.getId(), pack);
-                    Rarity linkedRarity = this.rarities.get(pack.getRarityShortName());
-                    pack.setRarity(linkedRarity);
-                    linkedRarity.addPack(pack);
+                    this.handlePack(pack);
                 }
             }
         }
         return isConfigValid;
+    }
+
+    private void handlePack(Pack pack) {
+        this.packs.put(pack.getId(), pack);
+        Rarity linkedRarity = this.rarities.get(pack.getRarityShortName());
+        pack.setRarity(linkedRarity);
+        linkedRarity.addPack(pack);
+        if(pack.getItemStackList().size() > this.maxItemStacksInOnePack) {
+            this.maxItemStacksInOnePack = pack.getItemStackList().size();
+        }
+    }
+
+    public void recomputeMaxItemStacksInOnePack() {
+        this.maxItemStacksInOnePack =
+                this.packs.values()
+                        .stream()
+                        .map(p -> p.getItemStackList().size())
+                        .max(Integer::compareTo)
+                        .orElse(1);
     }
 
     public Map<Integer, Pack> getPacks() {
@@ -66,6 +83,18 @@ public class GachaConfiguration {
 
     public void setRarities(Map<String, Rarity> rarities) {
         this.rarities = rarities;
+    }
+
+    public Integer getMaxItemStacksInOnePack() {
+        return maxItemStacksInOnePack;
+    }
+
+    public void setMaxItemStacksInOnePack(Integer maxItemStacksInOnePack) {
+        this.maxItemStacksInOnePack = maxItemStacksInOnePack;
+    }
+
+    public Integer getMinimumFreeSpaceForMultiDraw() {
+        return this.multiDraw.getQuantity() * this.maxItemStacksInOnePack;
     }
 
     private boolean isTotalProbabilityEqualTo100() {

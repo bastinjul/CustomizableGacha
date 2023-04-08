@@ -2,6 +2,7 @@ package be.julienbastin.customizablegacha.commands.subcommands.pack;
 
 import be.julienbastin.customizablegacha.CustomizableGacha;
 import be.julienbastin.customizablegacha.commands.subcommands.SubCommand;
+import be.julienbastin.customizablegacha.config.Pack;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -44,9 +45,13 @@ public class PackDeleteSC extends SubCommand {
             sender.sendMessage("Usage : /czgacha pack delete <packId>");
             return false;
         }
-        this.plugin.getPacks().remove(packId);
+        Pack removedPack = this.plugin.getPacks().remove(packId);
+        this.plugin.getRarities().get(removedPack.getRarityShortName()).getPacks().remove(removedPack);
         this.plugin.getConfig().set("packs", this.plugin.getPacks().values().stream().toList());
         this.plugin.saveConfig();
+        if(removedPack.getItemStackList().size() == this.plugin.getGachaConfiguration().getMaxItemStacksInOnePack()) {
+            this.plugin.getGachaConfiguration().recomputeMaxItemStacksInOnePack();
+        }
         sender.sendMessage("Pack deleted!");
         return true;
     }

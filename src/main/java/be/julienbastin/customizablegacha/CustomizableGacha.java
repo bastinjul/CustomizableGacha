@@ -166,6 +166,10 @@ public class CustomizableGacha extends JavaPlugin {
         return maxId.map(integer -> integer + 1).orElse(1);
     }
 
+    public GachaConfiguration getGachaConfiguration() {
+        return gachaConfiguration;
+    }
+
     public SingleDraw getSingleDraw() {
         return this.gachaConfiguration.getSingleDraw();
     }

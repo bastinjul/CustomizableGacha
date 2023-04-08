@@ -65,9 +65,13 @@ public class PackCreateSC extends SubCommand {
                 return false;
             }
         }
+        rarity.addPack(pack);
         this.plugin.getPacks().put(pack.getId(), pack);
         this.plugin.getConfig().set("packs", this.plugin.getPacks().values().stream().toList());
         this.plugin.saveConfig();
+        if(this.plugin.getGachaConfiguration().getMaxItemStacksInOnePack() < pack.getItemStackList().size()) {
+            this.plugin.getGachaConfiguration().setMaxItemStacksInOnePack(pack.getItemStackList().size());
+        }
         sender.sendMessage("Pack created!");
         return true;
     }

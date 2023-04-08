@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MultiSC extends DrawSC {
+public non-sealed class MultiSC extends DrawSC {
 
     public static final String PERMISSION = "czgacha.multi.draw";
 
@@ -43,8 +43,18 @@ public class MultiSC extends DrawSC {
     }
 
     @Override
-    protected void draw() {
+    protected Integer getPrice() {
+        return this.plugin.getMultiDraw().getPrice();
+    }
 
+    @Override
+    protected Integer getNeededFreeSpace() {
+        return this.plugin.getGachaConfiguration().getMinimumFreeSpaceForMultiDraw();
+    }
+
+    @Override
+    protected int getDrawQuantity() {
+        return this.plugin.getMultiDraw().getQuantity();
     }
 
     @Override

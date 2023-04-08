@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SingleSC extends DrawSC {
+public non-sealed class SingleSC extends DrawSC {
 
     public static final String PERMISSION = "czgacha.single.draw";
 
@@ -39,8 +39,18 @@ public class SingleSC extends DrawSC {
     }
 
     @Override
-    protected void draw() {
+    protected Integer getPrice() {
+        return this.plugin.getSingleDraw().getPrice();
+    }
 
+    @Override
+    protected Integer getNeededFreeSpace() {
+        return this.plugin.getGachaConfiguration().getMaxItemStacksInOnePack();
+    }
+
+    @Override
+    protected int getDrawQuantity() {
+        return 1;
     }
 
     @Override
